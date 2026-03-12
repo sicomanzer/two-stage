@@ -132,10 +132,10 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
   const pbvFooter = pbvStats ? `[ Last PBV = ${pbvLast?.pbv.toFixed(2)} ] (${(pbvStats.avg - 2 * pbvStats.sd).toFixed(2)}) (${(pbvStats.avg - pbvStats.sd).toFixed(2)}) [ AVG = ${pbvStats.avg.toFixed(2)} ] (${(pbvStats.avg + pbvStats.sd).toFixed(2)}) (${(pbvStats.avg + 2 * pbvStats.sd).toFixed(2)})` : '';
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       
       {/* EPS Chart */}
-      <ChartContainer title={`${ticker} : EPS (Earnings Per Share)`}>
+      <ChartContainer title={`${ticker} : กำไรต่อหุ้น (EPS)`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={history}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -148,7 +148,7 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
       </ChartContainer>
 
       {/* DPS Chart */}
-      <ChartContainer title={`${ticker} : DPS (Dividend Per Share)`}>
+      <ChartContainer title={`${ticker} : เงินปันผลต่อหุ้น (DPS)`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={history}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -161,7 +161,7 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
       </ChartContainer>
 
       {/* D/E Ratio Chart */}
-      <ChartContainer title={`${ticker} : D/E (Debt to Equity)`}>
+      <ChartContainer title={`${ticker} : อัตราส่วนหนี้สินต่อทุน (D/E)`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={history}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -174,7 +174,7 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
       </ChartContainer>
 
       {/* Net Profit Chart */}
-      <ChartContainer title={`${ticker} : Net Profit`}>
+      <ChartContainer title={`${ticker} : กำไรสุทธิ (Net Profit)`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={history}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -187,7 +187,7 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
       </ChartContainer>
 
       {/* Revenue Chart */}
-      <ChartContainer title={`${ticker} : Revenue`}>
+      <ChartContainer title={`${ticker} : รายได้รวม (Revenue)`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={history}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -200,7 +200,7 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
       </ChartContainer>
 
       {/* Net Profit Margin Chart */}
-      <ChartContainer title={`${ticker} : Net Profit Margin (%)`}>
+      <ChartContainer title={`${ticker} : อัตรากำไรสุทธิ (NPM %)`}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={history}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -213,7 +213,7 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
       </ChartContainer>
 
       {/* P/E Band Chart */}
-      <ChartContainer title={`${ticker} : PE Band`} footer={peFooter}>
+      <ChartContainer title={`${ticker} : PE Band (P/E Ratio Band)`} footer={peFooter}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={peChartData}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -232,7 +232,7 @@ export default function StockCharts({ history, ratioBands, ticker }: StockCharts
       </ChartContainer>
 
       {/* P/BV Band Chart */}
-      <ChartContainer title={`${ticker} : PBV Band`} footer={pbvFooter}>
+      <ChartContainer title={`${ticker} : PBV Band (P/BV Ratio Band)`} footer={pbvFooter}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={pbvChartData}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />

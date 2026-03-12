@@ -813,11 +813,11 @@ TTW`);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
-      <div className="max-w-[95%] mx-auto space-y-8">
+    <div suppressHydrationWarning className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
+      <div suppressHydrationWarning className="max-w-[95%] mx-auto space-y-8">
         
         {/* Header */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div suppressHydrationWarning className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-4">
             <div className="bg-emerald-100 p-3 rounded-xl text-emerald-600">
               <Calculator size={28} />
@@ -828,7 +828,7 @@ TTW`);
             </div>
           </div>
           
-          <div className="flex bg-slate-100 p-1 rounded-xl self-start md:self-center">
+          <div suppressHydrationWarning className="flex bg-slate-100 p-1 rounded-xl self-start md:self-center">
             <button 
               onClick={() => { setMode('single'); setError(null); }}
               className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${mode === 'single' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500 hover:text-slate-700'}`}
@@ -857,17 +857,17 @@ TTW`);
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div suppressHydrationWarning className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Input Form */}
           {mode !== 'portfolio' && (
-          <div className="lg:col-span-1 space-y-6 lg:order-last">
+          <div suppressHydrationWarning className="lg:col-span-1 space-y-6 lg:order-last">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
               <h2 className="text-lg font-semibold text-slate-800 mb-4">
                 {mode === 'single' ? 'พารามิเตอร์การประเมิน' : 'พารามิเตอร์การสแกน'}
               </h2>
               {!isClient ? (
-                <div className="h-[400px] flex items-center justify-center text-slate-400 animate-pulse bg-slate-50 rounded-xl">
+                <div suppressHydrationWarning className="h-[400px] flex items-center justify-center text-slate-400 animate-pulse bg-slate-50 rounded-xl">
                   Loading...
                 </div>
               ) : (
@@ -1215,11 +1215,101 @@ TTW`);
               </form>
               )}
             </div>
+
+            {/* Results Summary & Table */}
+            {mode === 'single' && result && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                
+                {/* Fair Price & Status */}
+                <div className="bg-emerald-600 rounded-2xl p-6 shadow-md text-white flex flex-col items-center gap-6 text-center">
+                  <div className="w-full">
+                    <p className="text-emerald-100 font-medium mb-1">มูลค่าที่เหมาะสม (Fair Price)</p>
+                    <div className="flex items-baseline justify-center space-x-2">
+                      <span className="text-5xl font-bold">{result.fairPrice.toFixed(2)}</span>
+                      <span className="text-emerald-200 text-xl">บาท</span>
+                    </div>
+                  </div>
+                  
+                  {result.currentPrice && (
+                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 bg-emerald-700/50 p-4 rounded-xl">
+                      <div className="text-center sm:text-right">
+                        <p className="text-sm font-medium text-emerald-200 mb-1">Margin of Safety</p>
+                        <p className={`text-2xl font-bold ${
+                          result.margin >= 15 ? 'text-emerald-300' : 
+                          result.margin <= -15 ? 'text-red-300' : 'text-amber-300'
+                        }`}>
+                          {result.margin > 0 ? '+' : ''}{result.margin.toFixed(2)}%
+                        </p>
+                      </div>
+                      
+                      <div className={`px-4 py-2 rounded-full flex items-center space-x-2 font-medium bg-white/10 whitespace-nowrap`}>
+                        {result.status === 'Undervalued' && <CheckCircle2 size={18} className="text-emerald-300" />}
+                        {result.status === 'Overvalued' && <XCircle size={18} className="text-red-300" />}
+                        {result.status === 'Fair' && <AlertCircle size={18} className="text-amber-300" />}
+                        <span>{result.status}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Calculation Table */}
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                  <div className="px-6 py-4 border-b border-slate-200 bg-[#4472C4] text-white flex justify-between items-center">
+                    <h3 className="font-bold text-lg">{result.ticker}</h3>
+                    <div className="flex space-x-8 text-sm font-medium">
+                      <span>Assumption</span>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                      <thead className="text-slate-700 bg-[#E9EBF5] border-b border-slate-300">
+                        <tr>
+                          <th className="px-6 py-3 font-bold">Year</th>
+                          <th className="px-6 py-3 font-bold text-right">Dividend per share</th>
+                          <th className="px-6 py-3 font-bold text-right">Present Value</th>
+                          <th className="px-6 py-3 font-bold text-right">Growth</th>
+                          <th className="px-6 py-3 font-bold text-right">K</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {result.tableData.map((row: any, i: number) => (
+                          <tr key={i} className={`border-b border-slate-200 last:border-0 ${
+                            row.isTerminal ? 'bg-slate-50 font-medium' : 'bg-white'
+                          }`}>
+                            <td className="px-6 py-3 text-slate-900">{row.year}</td>
+                            <td className="px-6 py-3 text-right text-slate-800">
+                              {row.dividend !== null ? row.dividend.toFixed(2) : ''}
+                            </td>
+                            <td className="px-6 py-3 text-right text-slate-800">
+                              {row.pv !== null ? row.pv.toFixed(2) : ''}
+                            </td>
+                            <td className="px-6 py-3 text-right text-slate-800">
+                              {row.growth !== null ? `${(row.growth * 100).toFixed(0)}%` : ''}
+                              {row.isTerminal && ' ✚'}
+                            </td>
+                            <td className="px-6 py-3 text-right text-slate-800">
+                              {row.k !== null ? `${(row.k * 100).toFixed(2)}%` : ''}
+                            </td>
+                          </tr>
+                        ))}
+                        <tr className="bg-[#70AD47] text-white font-bold text-base">
+                          <td className="px-6 py-4">Fair Prices</td>
+                          <td className="px-6 py-4"></td>
+                          <td className="px-6 py-4 text-right">{result.fairPrice.toFixed(2)}</td>
+                          <td className="px-6 py-4"></td>
+                          <td className="px-6 py-4"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           )}
 
           {/* Results Area */}
-          <div className={`${mode === 'portfolio' ? 'lg:col-span-3' : 'lg:col-span-2'} space-y-6 lg:order-first`}>
+          <div suppressHydrationWarning className={`${mode === 'portfolio' ? 'lg:col-span-3' : 'lg:col-span-2'} space-y-6 lg:order-first`}>
             
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start space-x-3 text-red-700">
@@ -1240,94 +1330,7 @@ TTW`);
                   </div>
                 )}
 
-                {result && (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    
-                    {/* Fair Price & Status */}
-                    <div className="bg-emerald-600 rounded-2xl p-6 shadow-md text-white flex flex-col md:flex-row items-center justify-between gap-6">
-                      <div>
-                        <p className="text-emerald-100 font-medium mb-1">มูลค่าที่เหมาะสม (Fair Price)</p>
-                        <div className="flex items-baseline space-x-2">
-                          <span className="text-5xl font-bold">{result.fairPrice.toFixed(2)}</span>
-                          <span className="text-emerald-200 text-xl">บาท</span>
-                        </div>
-                      </div>
-                      
-                      {result.currentPrice && (
-                        <div className="flex items-center space-x-6 bg-emerald-700/50 p-4 rounded-xl">
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-emerald-200 mb-1">Margin of Safety</p>
-                            <p className={`text-2xl font-bold ${
-                              result.margin >= 15 ? 'text-emerald-300' : 
-                              result.margin <= -15 ? 'text-red-300' : 'text-amber-300'
-                            }`}>
-                              {result.margin > 0 ? '+' : ''}{result.margin.toFixed(2)}%
-                            </p>
-                          </div>
-                          
-                          <div className={`px-4 py-2 rounded-full flex items-center space-x-2 font-medium bg-white/10`}>
-                            {result.status === 'Undervalued' && <CheckCircle2 size={18} className="text-emerald-300" />}
-                            {result.status === 'Overvalued' && <XCircle size={18} className="text-red-300" />}
-                            {result.status === 'Fair' && <AlertCircle size={18} className="text-amber-300" />}
-                            <span>{result.status}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
 
-                    {/* Calculation Table */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                      <div className="px-6 py-4 border-b border-slate-200 bg-[#4472C4] text-white flex justify-between items-center">
-                        <h3 className="font-bold text-lg">{result.ticker}</h3>
-                        <div className="flex space-x-8 text-sm font-medium">
-                          <span>Assumption</span>
-                        </div>
-                      </div>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left">
-                          <thead className="text-slate-700 bg-[#E9EBF5] border-b border-slate-300">
-                            <tr>
-                              <th className="px-6 py-3 font-bold">Year</th>
-                              <th className="px-6 py-3 font-bold text-right">Dividend per share</th>
-                              <th className="px-6 py-3 font-bold text-right">Present Value</th>
-                              <th className="px-6 py-3 font-bold text-right">Growth</th>
-                              <th className="px-6 py-3 font-bold text-right">K</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {result.tableData.map((row: any, i: number) => (
-                              <tr key={i} className={`border-b border-slate-200 last:border-0 ${
-                                row.isTerminal ? 'bg-slate-50 font-medium' : 'bg-white'
-                              }`}>
-                                <td className="px-6 py-3 text-slate-900">{row.year}</td>
-                                <td className="px-6 py-3 text-right text-slate-800">
-                                  {row.dividend !== null ? row.dividend.toFixed(2) : ''}
-                                </td>
-                                <td className="px-6 py-3 text-right text-slate-800">
-                                  {row.pv !== null ? row.pv.toFixed(2) : ''}
-                                </td>
-                                <td className="px-6 py-3 text-right text-slate-800">
-                                  {row.growth !== null ? `${(row.growth * 100).toFixed(0)}%` : ''}
-                                  {row.isTerminal && ' ✚'}
-                                </td>
-                                <td className="px-6 py-3 text-right text-slate-800">
-                                  {row.k !== null ? `${(row.k * 100).toFixed(2)}%` : ''}
-                                </td>
-                              </tr>
-                            ))}
-                            <tr className="bg-[#70AD47] text-white font-bold text-base">
-                              <td className="px-6 py-4">Fair Prices</td>
-                              <td className="px-6 py-4"></td>
-                              <td className="px-6 py-4 text-right">{result.fairPrice.toFixed(2)}</td>
-                              <td className="px-6 py-4"></td>
-                              <td className="px-6 py-4"></td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {stockHistory.length > 0 && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">

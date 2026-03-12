@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     // Setup dates for historical data
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setFullYear(endDate.getFullYear() - 10);
+    startDate.setFullYear(endDate.getFullYear() - 20);
 
     // Fetch data in parallel
     const [quoteResult, chartResult, fundamentalsResult] = await Promise.allSettled([
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
     // Process History Data
     const history: any[] = [];
     const yearMap = new Map<number, any>();
-
+    
     // Process Financials (Annual)
     let lastShares = 0;
     let lastEquity = 0;
@@ -265,9 +265,9 @@ export async function GET(request: Request) {
     };
 
     // Merge everything into History Array
-    // We want last 10 years, e.g. 2014-2024
+    // We want last 20 years, e.g. 2004-2024
     const currentYear = new Date().getFullYear();
-    for (let y = currentYear - 10; y <= currentYear; y++) {
+    for (let y = currentYear - 20; y <= currentYear; y++) {
         let entry = yearMap.get(y) || { year: y };
         
         // Add Dividend
